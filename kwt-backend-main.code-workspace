@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "../kwt-backend-main"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "../twenty-feature-messages-module"
+		},
+		{
+			"path": "../twenty-main"
+		},
+		{
+			"path": "../cal.com-main"
+		},
+		{
+			"path": "../Booking-Images"
+		}
+	],
+	"settings": {}
+}

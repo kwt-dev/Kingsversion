@@ -1,0 +1,26 @@
+/* Services Showcase Tab Styles */
+
+/* Service Tab Styles - Clean slate for glass effects */
+.pill-ghost {
+  position: relative;
+  cursor: pointer;
+}
+
+.pill-active {
+  position: relative;
+  cursor: pointer;
+}
+
+/* Remove hover effects for service tab buttons */
+.service-tab-wrapper .glass-surface:hover {
+  transform: none !important;
+  scale: 1 !important;
+}
+
+.service-tab-wrapper button {
+  pointer-events: auto;
+}
+
+.service-tab-wrapper > div:hover {
+  transform: none !important;
+}
