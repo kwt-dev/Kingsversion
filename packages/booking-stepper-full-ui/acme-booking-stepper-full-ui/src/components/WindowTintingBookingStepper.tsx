@@ -381,14 +381,18 @@ export const WindowTintingBookingStepper: React.FC = () => {
             </Button>
 
             <div className="flex items-center gap-4">
-              {bookingData.responses?.['estimated-price'] > 0 && (
+              {(() => {
+                const estimatedPrice = bookingData.responses?.['estimated-price'] ?? 0;
+
+                return estimatedPrice > 0 ? (
                 <div className="text-right">
                   <p className="text-sm text-muted-foreground">Estimated Total</p>
                   <p className="text-xl font-semibold text-green-400">
-                    ${bookingData.responses['estimated-price'].toFixed(2)}
+                    ${estimatedPrice.toFixed(2)}
                   </p>
                 </div>
-              )}
+                ) : null;
+              })()}
               
               {currentStepData?.id !== 'review' ? (
                 <motion.div whileTap={{ scale: 1.02 }}>
