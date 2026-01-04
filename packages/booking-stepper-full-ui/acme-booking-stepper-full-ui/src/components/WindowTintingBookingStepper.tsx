@@ -102,17 +102,38 @@ export const WindowTintingBookingStepper: React.FC = () => {
 
   const updateBookingData = (updates: Partial<BookingData>) => {
     setBookingData(prev => {
+      const updatedAttendee: BookingData['attendee'] = {
+        name: '',
+        email: '',
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        language: 'en',
+        ...prev.attendee,
+        ...updates.attendee,
+      };
+
+      const updatedResponses: BookingData['responses'] = {
+        'service-category': 'TINT',
+        'vehicle-year': new Date().getFullYear(),
+        'vehicle-make': '',
+        'vehicle-model': '',
+        'vehicle-color': '',
+        'vehicle-class': 'CAR',
+        'coverage-selections': [],
+        'service-subtype': '',
+        'film-tier': '',
+        'customer-phone': '',
+        'preferred-contact': 'SMS',
+        'variant-code': '',
+        'estimated-price': 0,
+        ...prev.responses,
+        ...updates.responses,
+      };
+
       const updated = {
         ...prev,
         ...updates,
-        responses: {
-          ...prev.responses,
-          ...updates.responses,
-        },
-        attendee: {
-          ...prev.attendee,
-          ...updates.attendee,
-        },
+        responses: updatedResponses,
+        attendee: updatedAttendee,
       };
       
       // Recompute variant code and price when relevant fields change
