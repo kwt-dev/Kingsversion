@@ -7,14 +7,15 @@ RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 # Set the working directory
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copy package files (workspace-aware)
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/booking-stepper-full-ui/package.json packages/booking-stepper-full-ui/
 
 # Install pnpm globally
 RUN npm install -g pnpm
 
 # Install dependencies
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
 
 # Copy the rest of the application code
 COPY . .
