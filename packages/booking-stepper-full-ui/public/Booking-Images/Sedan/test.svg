@@ -1,0 +1,26 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Simple sedan silhouette for testing -->
+  <rect x="0" y="0" width="400" height="300" fill="#1a1a1a"/>
+
+  <!-- Car body -->
+  <path d="M50 200 L50 220 Q50 230 60 230 L90 230 Q100 230 100 220 L100 200 L300 200 L300 220 Q300 230 310 230 L340 230 Q350 230 350 220 L350 200 Q360 190 360 175 L360 150 Q360 140 350 135 L340 130 L320 100 Q310 85 295 80 L105 80 Q90 85 80 100 L60 130 L50 135 Q40 140 40 150 L40 175 Q40 190 50 200 Z" fill="#ef4444" stroke="#dc2626" stroke-width="2"/>
+
+  <!-- Wheels -->
+  <circle cx="90" cy="225" r="18" fill="#374151" stroke="#1f2937" stroke-width="2"/>
+  <circle cx="310" cy="225" r="18" fill="#374151" stroke="#1f2937" stroke-width="2"/>
+  <circle cx="90" cy="225" r="10" fill="#d1d5db" stroke="#9ca3af"/>
+  <circle cx="310" cy="225" r="10" fill="#d1d5db" stroke="#9ca3af"/>
+
+  <!-- Windows -->
+  <path d="M80 100 L320 100 L305 130 L95 130 Z" fill="#6b7280" stroke="#4b5563" stroke-width="1"/>
+  <rect x="75" y="135" width="45" height="35" rx="5" fill="#6b7280" stroke="#4b5563"/>
+  <rect x="130" y="135" width="35" height="35" rx="5" fill="#6b7280" stroke="#4b5563"/>
+  <rect x="235" y="135" width="35" height="35" rx="5" fill="#6b7280" stroke="#4b5563"/>
+  <rect x="280" y="135" width="45" height="35" rx="5" fill="#6b7280" stroke="#4b5563"/>
+
+  <!-- Headlights -->
+  <ellipse cx="45" cy="150" rx="12" ry="8" fill="#f3f4f6" stroke="#9ca3af" stroke-width="2"/>
+  <ellipse cx="355" cy="150" rx="12" ry="8" fill="#f3f4f6" stroke="#9ca3af" stroke-width="2"/>
+
+  <text x="200" y="260" text-anchor="middle" fill="#f5c542" font-family="Arial" font-size="14">Simple Sedan Test</text>
+</svg>

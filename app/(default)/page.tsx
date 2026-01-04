@@ -1,50 +1,31 @@
 export const metadata = {
-  title: 'Home - Stellar',
-  description: 'Page description',
-};
+  title: "King's Window Tint | Columbus Tint, PPF & Ceramic Coatings",
+  description:
+    "Family-owned for over 25 years, King's Window Tint delivers precision tint, paint protection film, and ceramic coatings to drivers across Columbus and Central Ohio.",
+}
 
-import Hero from '@/components/hero';
-import Credibility from '@/components/credibility';
-import InlineBookingCta from '@/components/inline-booking-cta';
-import ServicesSection from '@/components/services-section';
-import Features from '@/components/features';
-// New custom sections for King's redesign
-import ServicesShowcase from '@/components/services-showcase';
-import ServicesShowcaseTest from '@/components/services-showcase-test';
-import KingsDifference from '@/components/kings-difference';
-import HeatReality from '@/components/heat-reality';
-import Faqs from '@/components/faqs';
-import FinalCta from '@/components/final-cta';
+import Hero from '@/components/hero'
+import WhyDriversTrust from '@/components/why-drivers-trust'
+import InstantQuoteCallout from '@/components/instant-quote-callout'
+import Transformation from '@/components/transformation'
+import FeaturedServices from '@/components/featured-services'
+import SocialProof from '@/components/social-proof'
+import PersonalStory from '@/components/personal-story'
+import ProcessSteps from '@/components/process-steps'
+import FinalCta from '@/components/final-cta'
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <Credibility />
-      <InlineBookingCta />
-      {/* Mini services directly below credibility intro */}
-      <ServicesSection />
-
-      {/* Appointment stepper placeholder - keep as provided */}
-      <Features />
-
-      {/* Main services showcase (large panel with tabs) */}
-      <ServicesShowcase />
-       <ServicesShowcaseTest />
-
-      {/* King's Difference stats & narrative */}
-      <KingsDifference />
-
-      {/* Heat & Damage Reality panel */}
-      {/* <HeatReality /> */}
-
-      {/* Trust strip intentionally omitted to match current design mock */}
-
-      {/* FAQs populated with client copy */}
-      <Faqs />
-
-      {/* Final conversion CTA */}
+      <WhyDriversTrust />
+      <PersonalStory />
+      <InstantQuoteCallout />
+      <Transformation />
+      <FeaturedServices />
+      <SocialProof />
+      <ProcessSteps />
       <FinalCta />
     </>
-  );
+  )
 }

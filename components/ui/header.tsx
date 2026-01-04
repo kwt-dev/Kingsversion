@@ -5,19 +5,20 @@ import Link from 'next/link';
 import Logo from './logo';
 import MenuButton from './menu-button';
 import KingsButton from './kings-button';
+import GlassSurface from '../GlassSurface';
 import { Building2 } from 'lucide-react';
 
 export default function Header() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
-    <header className="absolute w-full z-30">
-      <div className="relative w-full max-w-7xl mx-auto px-12 sm:px-18">
-        <div className="flex items-center justify-between w-full pt-12 sm:pt-16 h-16 md:h-20">
-          {/* Site branding */}
-          <div className="flex-1">
-            <Logo />
-          </div>
+    <header className="w-full z-30 absolute top-0 left-0 bg-obsidian">
+      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-12">
+        <div className="flex items-center justify-between w-full py-3 sm:py-4">
+            {/* Site branding */}
+            <div className="flex-1">
+              <Logo />
+            </div>
 
           {/* Desktop Navigation - hidden on mobile, visible on md+ */}
           <nav className="hidden md:flex items-center space-x-8 flex-1 justify-center">
@@ -80,7 +81,27 @@ export default function Header() {
             mobileNavOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
           }`}
         >
-          <ul className="bg-obsidian/95 backdrop-blur-md border border-gold-accent/20 rounded-lg px-4 py-4 mt-4 space-y-3">
+          <div className="mt-4">
+            <GlassSurface
+              width="100%"
+              height="auto"
+              borderRadius={12}
+              borderWidth={0.08}
+              brightness={30}
+              opacity={0.85}
+              blur={12}
+              displace={8}
+              backgroundOpacity={0.4}
+              saturation={1.2}
+              distortionScale={-150}
+              redOffset={5}
+              greenOffset={15}
+              blueOffset={25}
+              mixBlendMode="screen"
+              className="bg-gradient-to-r from-king-red/60 to-king-red/40 border border-gold-accent/20"
+              style={{ display: 'block' }}
+            >
+              <ul className="px-4 py-4 space-y-3">
             <li>
               <Link
                 className="flex font-medium text-sm text-white hover:text-gold-accent transition-colors py-2"
@@ -127,6 +148,8 @@ export default function Header() {
               </Link>
             </li>
           </ul>
+            </GlassSurface>
+          </div>
         </nav>
       </div>
     </header>

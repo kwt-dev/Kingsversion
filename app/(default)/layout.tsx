@@ -7,6 +7,7 @@ import 'aos/dist/aos.css'
 
 import Header from '@/components/ui/header'
 import Footer from '@/components/ui/footer'
+import { BookingWidgetProvider } from '@/components/booking-widget-provider'
 
 export default function DefaultLayout({
   children,
@@ -24,16 +25,12 @@ export default function DefaultLayout({
   })
 
   return (
-    <>
+    <BookingWidgetProvider>
       <Header />
-      
-      <main className="grow">
 
-        {children}
-
-      </main>
+      <main className="grow">{children}</main>
 
       <Footer />
-    </>
+    </BookingWidgetProvider>
   )
 }
