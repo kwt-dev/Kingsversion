@@ -12,7 +12,7 @@ import {
   PopoverTrigger,
 } from "../ui/popover";
 import { Info, ChevronLeft, ChevronRight } from "lucide-react";
-import { BookingData } from "../WindowTintingBookingStepper";
+import { BookingData, BookingDataUpdate } from "../WindowTintingBookingStepper";
 import {
   Tooltip,
   TooltipContent,
@@ -22,7 +22,7 @@ import {
 
 interface BuildPackageStepProps {
   bookingData: Partial<BookingData>;
-  updateBookingData: (updates: Partial<BookingData>) => void;
+  updateBookingData: (updates: BookingDataUpdate) => void;
   onNext: () => void;
   onPrev: () => void;
 }
@@ -136,13 +136,13 @@ const transitions = {
     initial: { opacity: 0, y: 12 },
     animate: { opacity: 1, y: 0 },
     exit: { opacity: 0, y: -12 },
-    transition: { duration: 0.2, ease: "easeOut" },
+    transition: { duration: 0.2 },
   },
   "Film→Coverage": {
     initial: { opacity: 0, y: -12 },
     animate: { opacity: 1, y: 0 },
     exit: { opacity: 0, y: 12 },
-    transition: { duration: 0.2, ease: "easeOut" },
+    transition: { duration: 0.2 },
   },
 };
 
@@ -611,7 +611,7 @@ const CoverageView: React.FC<{
                     </h4>
                     <Tooltip>
                       <TooltipTrigger
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e: React.MouseEvent) => e.stopPropagation()}
                       >
                         <Info className="h-4 w-4 text-muted-foreground" />
                       </TooltipTrigger>
@@ -848,7 +848,7 @@ export const BuildPackageStep: React.FC<
   const [hoveredRegion, setHoveredRegion] =
     useState<string>("");
 
-  const responses = bookingData.responses || {};
+  const responses: Partial<BookingData["responses"]> = bookingData.responses || {};
   const vehicleClass = responses["vehicle-class"] || "CAR";
   const coverageSelections = (responses[
     "coverage-selections"
@@ -1033,8 +1033,6 @@ export const BuildPackageStep: React.FC<
             prevTintRemoval={previousTintRemoval}
             currentStage={currentStage}
             onClearAll={handleClearAll}
-            onToggleRemoval={handleToggleRemoval}
-            onSelectTintLevel={handleSelectTintLevel}
           />
         </div>
       </div>

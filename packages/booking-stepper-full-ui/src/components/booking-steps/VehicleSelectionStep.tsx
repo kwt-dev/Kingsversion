@@ -7,11 +7,11 @@ import { Label } from '../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
-import { BookingData } from '../WindowTintingBookingStepper';
+import { BookingData, BookingDataUpdate } from '../WindowTintingBookingStepper';
 
 interface VehicleSelectionStepProps {
   bookingData: Partial<BookingData>;
-  updateBookingData: (updates: Partial<BookingData>) => void;
+  updateBookingData: (updates: BookingDataUpdate) => void;
   onNext: () => void;
 }
 
@@ -77,7 +77,7 @@ export const VehicleSelectionStep: React.FC<VehicleSelectionStepProps> = ({
 }) => {
   const selectedVehicle = bookingData.responses?.['vehicle-class'];
   const selectedSubtype = bookingData.responses?.['vehicle-subtype'];
-  const responses = bookingData.responses || {};
+  const responses: Partial<BookingData['responses']> = bookingData.responses || {};
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
@@ -172,7 +172,7 @@ export const VehicleSelectionStep: React.FC<VehicleSelectionStepProps> = ({
     }
   };
 
-  const selectedOption = VEHICLE_OPTIONS.find(v => v.id === selectedVehicle);
+  const selectedOption = VEHICLE_OPTIONS.find(v => v.id === selectedVehicle) || VEHICLE_OPTIONS[0];
 
   return (
     <div className="space-y-3 lg:space-y-6 flex flex-col">

@@ -10,8 +10,14 @@ interface SuccessStepProps {
 }
 
 export const SuccessStep: React.FC<SuccessStepProps> = ({ bookingData }) => {
-  const attendee = bookingData.attendee || {};
-  const responses = bookingData.responses || {};
+  const attendee: BookingData['attendee'] = {
+    name: '',
+    email: '',
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    language: 'en',
+    ...bookingData.attendee,
+  };
+  const responses: Partial<BookingData['responses']> = bookingData.responses || {};
 
   const formatDateTime = (isoString?: string) => {
     if (!isoString) return 'Not scheduled';

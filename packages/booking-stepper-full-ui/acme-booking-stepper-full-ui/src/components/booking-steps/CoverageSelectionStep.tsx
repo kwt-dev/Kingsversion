@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { Card } from '../ui/card';
 import { Checkbox } from '../ui/checkbox';
 import { Info, X } from 'lucide-react';
-import { BookingData } from '../WindowTintingBookingStepper';
+import { BookingData, BookingDataUpdate } from '../WindowTintingBookingStepper';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { 
@@ -15,7 +15,7 @@ import {
 
 interface CoverageSelectionStepProps {
   bookingData: Partial<BookingData>;
-  updateBookingData: (updates: Partial<BookingData>) => void;
+  updateBookingData: (updates: BookingDataUpdate) => void;
   onNext: () => void;
 }
 
@@ -186,7 +186,7 @@ export const CoverageSelectionStep: React.FC<CoverageSelectionStepProps> = ({
   const [hoveredRegions, setHoveredRegions] = useState<string[]>([]);
   const [hasError, setHasError] = useState(false);
   
-  const responses = bookingData.responses || {};
+  const responses: Partial<BookingData['responses']> = bookingData.responses || {};
   const vehicleClass = responses['vehicle-class'] || 'CAR';
   const coverageSelections = responses['coverage-selections'] || [];
 
@@ -408,7 +408,7 @@ export const CoverageSelectionStep: React.FC<CoverageSelectionStepProps> = ({
                           <div className="flex items-center gap-2">
                             <h4 className="font-medium">{option.title}</h4>
                             <Tooltip>
-                              <TooltipTrigger onClick={(e) => e.stopPropagation()}>
+                              <TooltipTrigger onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                 <Info className="h-4 w-4 text-muted-foreground" />
                               </TooltipTrigger>
                               <TooltipContent>

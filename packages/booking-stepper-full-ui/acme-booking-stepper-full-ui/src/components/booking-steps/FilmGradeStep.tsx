@@ -5,11 +5,11 @@ import { Switch } from '../ui/switch';
 import { Badge } from '../ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Info } from 'lucide-react';
-import { BookingData } from '../WindowTintingBookingStepper';
+import { BookingData, BookingDataUpdate } from '../WindowTintingBookingStepper';
 
 interface FilmGradeStepProps {
   bookingData: Partial<BookingData>;
-  updateBookingData: (updates: Partial<BookingData>) => void;
+  updateBookingData: (updates: BookingDataUpdate) => void;
   onNext: () => void;
 }
 
@@ -49,7 +49,7 @@ export const FilmGradeStep: React.FC<FilmGradeStepProps> = ({
   bookingData,
   updateBookingData,
 }) => {
-  const responses = bookingData.responses || {};
+  const responses: Partial<BookingData['responses']> = bookingData.responses || {};
   const selectedFilmTier = responses['film-tier'];
   const selectedWindshieldTier = responses['windshield-tier'];
   const selectedTintLevel = responses['tint-level'];

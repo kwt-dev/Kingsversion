@@ -5,11 +5,11 @@ import React, { useState, useEffect } from 'react';
   import { Label } from '../ui/label';
   import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
   import { Button } from '../ui/button';
-  import { BookingData } from '../WindowTintingBookingStepper';
+import { BookingData, BookingDataUpdate } from '../WindowTintingBookingStepper';
 
   interface DetailsStepProps {
-    bookingData: Partial<BookingData>;
-    updateBookingData: (updates: Partial<BookingData>) => void;
+  bookingData: Partial<BookingData>;
+  updateBookingData: (updates: BookingDataUpdate) => void;
     onNext: () => void;
   }
 
@@ -36,8 +36,14 @@ import React, { useState, useEffect } from 'react';
   }) => {
     const [phoneInput, setPhoneInput] = useState(bookingData.responses?.['customer-phone'] || '');
 
-    const attendee = bookingData.attendee || {};
-    const responses = bookingData.responses || {};
+    const attendee: BookingData['attendee'] = {
+      name: '',
+      email: '',
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      language: 'en',
+      ...bookingData.attendee,
+    };
+    const responses: Partial<BookingData['responses']> = bookingData.responses || {};
 
     const formatPhone = (value: string): string => {
       const numbers = value.replace(/\D/g, '');

@@ -34,7 +34,16 @@ export interface BookingData {
     
     // Service
     'service-category': 'TINT';
-    'coverage-selections': Array<'SIDES_REAR' | 'WINDSHIELD' | 'SUN_STRIP' | 'FACTORY_MATCH_FRONT_DOORS'>;
+    'coverage-selections': Array<
+      | 'SIDES_REAR'
+      | 'SIDE_WINDOWS'
+      | 'REAR_GLASS'
+      | 'WINDSHIELD'
+      | 'SUN_STRIP'
+      | 'FACTORY_MATCH_FRONT_DOORS'
+      | 'SINGLE_SUNROOF'
+      | 'DUAL_SUNROOF'
+    >;
     'service-subtype': string; // Computed from coverage-selections
 
     // Tint specifics
@@ -62,6 +71,11 @@ export interface BookingData {
     'estimated-price': number;
   };
 }
+
+export type BookingDataUpdate = Omit<Partial<BookingData>, 'responses' | 'attendee'> & {
+  responses?: Partial<BookingData['responses']>;
+  attendee?: Partial<BookingData['attendee']>;
+};
 
 
 const STEPS = [
@@ -92,7 +106,7 @@ export const WindowTintingBookingStepper: React.FC = () => {
       'vehicle-make': '',
       'vehicle-model': '',
       'vehicle-color': '',
-      'vehicle-class': undefined,
+      'vehicle-class': 'CAR',
       'coverage-selections': [],
       'service-subtype': '',
       'film-tier': '',
@@ -106,6 +120,9 @@ export const WindowTintingBookingStepper: React.FC = () => {
   const visibleSteps = STEPS;
   const currentStepData = visibleSteps[currentStep];
   const progress = ((currentStep + 1) / visibleSteps.length) * 100;
+  const estimatedPrice = bookingData.responses?.['estimated-price'] ?? 0;
+  const coverageSelections = bookingData.responses?.['coverage-selections'] ?? [];
+  const filmTier = bookingData.responses?.['film-tier'];
 
   // Center the active step when currentStep changes
   useEffect(() => {
@@ -116,9 +133,13 @@ export const WindowTintingBookingStepper: React.FC = () => {
     return () => clearTimeout(timeout);
   }, [currentStep]);
 
-  const updateBookingData = (updates: Partial<BookingData>) => {
+  const updateBookingData = (updates: BookingDataUpdate) => {
     setBookingData(prev => {
-      const updatedAttendee = {
+      const updatedAttendee: BookingData['attendee'] = {
+        name: '',
+        email: '',
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        language: 'en',
         ...prev.attendee,
         ...updates.attendee,
       };
@@ -128,13 +149,28 @@ export const WindowTintingBookingStepper: React.FC = () => {
         updatedAttendee.name = `${updatedAttendee.firstName || ''} ${updatedAttendee.lastName || ''}`.trim();
       }
 
+      const updatedResponses: BookingData['responses'] = {
+        'service-category': 'TINT',
+        'vehicle-year': new Date().getFullYear(),
+        'vehicle-make': '',
+        'vehicle-model': '',
+        'vehicle-color': '',
+        'vehicle-class': 'CAR',
+        'coverage-selections': [],
+        'service-subtype': '',
+        'film-tier': '',
+        'customer-phone': '',
+        'preferred-contact': 'SMS',
+        'variant-code': '',
+        'estimated-price': 0,
+        ...prev.responses,
+        ...updates.responses,
+      };
+
       const updated = {
         ...prev,
         ...updates,
-        responses: {
-          ...prev.responses,
-          ...updates.responses,
-        },
+        responses: updatedResponses,
         attendee: updatedAttendee,
       };
       
@@ -445,7 +481,7 @@ export const WindowTintingBookingStepper: React.FC = () => {
       case 'film':
         return "Each film grade offers different benefits and performance levels";
       case 'appointment':
-        const estimatedPrice = responses?.['estimated-price'];
+        const estimatedPrice = responses?.['estimated-price'] ?? 0;
         return estimatedPrice > 0
           ? `Your service starts at $${estimatedPrice} - let's find the perfect time`
           : "Select a date and time that works with your schedule";
@@ -507,16 +543,16 @@ export const WindowTintingBookingStepper: React.FC = () => {
             )}
           </div>
 
-          {(bookingData.responses?.['estimated-price'] > 0 || (bookingData.responses?.['coverage-selections']?.length > 0 && !bookingData.responses?.['film-tier'])) && (
+          {(estimatedPrice > 0 || (coverageSelections.length > 0 && !filmTier)) && (
             <div className="mb-2 lg:mb-4">
               <div className="text-center p-2 lg:p-3 bg-neutral-800/40 rounded-lg border border-white/20">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <div className="text-gray-400 font-medium text-xs lg:text-sm mb-1">Estimated Total:</div>
                     <div className="text-green-400 font-semibold text-sm lg:text-base">
-                      {bookingData.responses?.['estimated-price'] > 0
-                        ? `$${bookingData.responses['estimated-price']}`
-                        : `Starts at ${calculateStartingPrice(bookingData.responses)}`
+                      {estimatedPrice > 0
+                        ? `$${estimatedPrice}`
+                        : `Starts at ${calculateStartingPrice(bookingData.responses ?? {})}`
                       }
                     </div>
                   </div>

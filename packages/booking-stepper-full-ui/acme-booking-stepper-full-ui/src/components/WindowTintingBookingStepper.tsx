@@ -59,6 +59,11 @@ export interface BookingData {
   };
 }
 
+export type BookingDataUpdate = Omit<Partial<BookingData>, 'responses' | 'attendee'> & {
+  responses?: Partial<BookingData['responses']>;
+  attendee?: Partial<BookingData['attendee']>;
+};
+
 const STEPS = [
   { id: 'vehicle', title: 'Vehicle', description: 'Select your vehicle type' },
   { id: 'build-package', title: 'Build Your Package', description: 'Choose coverage and film grade' },
@@ -100,7 +105,7 @@ export const WindowTintingBookingStepper: React.FC = () => {
   const currentStepData = visibleSteps[currentStep];
   const progress = ((currentStep + 1) / visibleSteps.length) * 100;
 
-  const updateBookingData = (updates: Partial<BookingData>) => {
+  const updateBookingData = (updates: BookingDataUpdate) => {
     setBookingData(prev => {
       const updatedAttendee: BookingData['attendee'] = {
         name: '',

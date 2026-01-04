@@ -30,5 +30,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "packages/booking-stepper-full-ui/acme-booking-stepper-full-ui"
+  ]
 }

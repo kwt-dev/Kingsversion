@@ -2,11 +2,11 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Car, Truck, CarIcon } from 'lucide-react';
 import { Card } from '../ui/card';
-import { BookingData } from '../WindowTintingBookingStepper';
+import { BookingData, BookingDataUpdate } from '../WindowTintingBookingStepper';
 
 interface VehicleSelectionStepProps {
   bookingData: Partial<BookingData>;
-  updateBookingData: (updates: Partial<BookingData>) => void;
+  updateBookingData: (updates: BookingDataUpdate) => void;
   onNext: () => void;
 }
 

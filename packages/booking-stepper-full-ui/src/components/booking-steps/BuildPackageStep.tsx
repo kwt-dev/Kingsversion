@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import Image from "next/image";
 import { Card } from "../ui/card";
 import { Checkbox } from "../ui/checkbox";
 import { Switch } from "../ui/switch";
@@ -11,7 +12,7 @@ import {
   PopoverTrigger,
 } from "../ui/popover";
 import { Info, ChevronLeft, ChevronRight } from "lucide-react";
-import { BookingData } from "../WindowTintingBookingStepper";
+import { BookingData, BookingDataUpdate } from "../WindowTintingBookingStepper";
 import {
   Tooltip,
   TooltipContent,
@@ -27,7 +28,7 @@ import {
 
 interface BuildPackageStepProps {
   bookingData: Partial<BookingData>;
-  updateBookingData: (updates: Partial<BookingData>) => void;
+  updateBookingData: (updates: BookingDataUpdate) => void;
   onNext: () => void;
   onPrev: () => void;
   stage?: "coverage" | "film";
@@ -284,13 +285,13 @@ const transitions = {
     initial: { opacity: 0, y: 12 },
     animate: { opacity: 1, y: 0 },
     exit: { opacity: 0, y: -12 },
-    transition: { duration: 0.2, ease: "easeOut" },
+    transition: { duration: 0.2 },
   },
   "Film→Coverage": {
     initial: { opacity: 0, y: -12 },
     animate: { opacity: 1, y: 0 },
     exit: { opacity: 0, y: 12 },
-    transition: { duration: 0.2, ease: "easeOut" },
+    transition: { duration: 0.2 },
   },
 };
 
@@ -774,6 +775,7 @@ const SummaryCard: React.FC<{
   tintLevel: string | null;
   prevTintRemoval: boolean;
   currentStage: Stage;
+  hasFactoryTint?: boolean;
   onClearAll: () => void;
 }> = ({
   vehicleClass,
@@ -783,6 +785,7 @@ const SummaryCard: React.FC<{
   tintLevel,
   prevTintRemoval,
   currentStage,
+  hasFactoryTint,
   onClearAll,
 }) => {
   // Calculate price range for coverage stage
@@ -822,8 +825,6 @@ const SummaryCard: React.FC<{
   };
 
   const getCoverageDisplayNames = (): string[] => {
-    const hasFactoryTint = responses['has-factory-tint'];
-
     const getDisplayName = (selection: CoverageOption): string => {
       const option = COVERAGE_OPTIONS.find(opt => opt.id === selection);
       if (option && typeof option.title === 'function') {
@@ -833,6 +834,8 @@ const SummaryCard: React.FC<{
       const displayNames: { [key in CoverageOption]: string } = {
         SIDES_REAR: hasFactoryTint ? "Factory Enhance" : "Sides & Rear",
         FACTORY_MATCH_FRONT_DOORS: "Factory Match",
+        SIDE_WINDOWS: "Side Windows",
+        REAR_GLASS: "Rear Glass",
         WINDSHIELD: "Windshield",
         SUN_STRIP: "Sun Strip (Brow)",
         SINGLE_SUNROOF: "Single Panel Sunroof",
@@ -847,8 +850,6 @@ const SummaryCard: React.FC<{
   };
 
   const getCoverageDescriptions = (): { name: string; description: string }[] => {
-    const hasFactoryTint = responses['has-factory-tint'];
-
     const getDescriptionData = (selection: CoverageOption): { name: string; description: string } => {
       const option = COVERAGE_OPTIONS.find(opt => opt.id === selection);
 
@@ -864,6 +865,8 @@ const SummaryCard: React.FC<{
         const fallbackDescriptions: { [key in CoverageOption]: string } = {
           SIDES_REAR: "Side Windows and Rear Glass. Take your factory tint darker and reduce heat",
           FACTORY_MATCH_FRONT_DOORS: "Includes Front Door Windows",
+          SIDE_WINDOWS: "Side windows coverage",
+          REAR_GLASS: "Rear glass coverage",
           WINDSHIELD: "Full windshield tint for heat & glare reduction",
           SUN_STRIP: "6-8 inch strip at top of windshield to reduce glare",
           SINGLE_SUNROOF: "Professional tint for your standard sunroof panel",
@@ -873,6 +876,8 @@ const SummaryCard: React.FC<{
         const fallbackDisplayNames: { [key in CoverageOption]: string } = {
           SIDES_REAR: hasFactoryTint ? "Factory Enhance" : "Sides & Rear",
           FACTORY_MATCH_FRONT_DOORS: "Factory Match",
+          SIDE_WINDOWS: "Side Windows",
+          REAR_GLASS: "Rear Glass",
           WINDSHIELD: "Windshield",
           SUN_STRIP: "Sun Strip (Brow)",
           SINGLE_SUNROOF: "Single Panel Sunroof",
@@ -972,7 +977,7 @@ const SummaryCard: React.FC<{
               </div>
               <div className="text-right">
                 <div className="text-sm font-medium text-white">
-                  ${responses["estimated-price"] || 0}
+                  ${total || 0}
                 </div>
               </div>
             </div>
@@ -1082,7 +1087,7 @@ const CoverageView: React.FC<{
                           {typeof option.title === 'function' ? option.title(hasFactoryTint) : option.title}
                         </h4>
                         <Tooltip>
-                          <TooltipTrigger onClick={(e) => e.stopPropagation()}>
+                          <TooltipTrigger onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                             <Info className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-gray-400 flex-shrink-0" />
                           </TooltipTrigger>
                           <TooltipContent>
@@ -1136,7 +1141,7 @@ const CoverageView: React.FC<{
                         {typeof option.title === 'function' ? option.title(hasFactoryTint) : option.title}
                       </span>
                       <Tooltip>
-                        <TooltipTrigger onClick={(e) => e.stopPropagation()}>
+                        <TooltipTrigger onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                           <Info className="h-3 w-3 text-gray-400 flex-shrink-0" />
                         </TooltipTrigger>
                         <TooltipContent>
@@ -1254,7 +1259,7 @@ const FilmView: React.FC<{
                             className="p-1 text-gray-400 hover:text-[#f5c542] transition-colors"
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
-                            onClick={(e) => e.stopPropagation()}
+                            onClick={(e: React.MouseEvent) => e.stopPropagation()}
                           >
                             <Info className="h-4 w-4" />
                           </motion.button>
@@ -1401,7 +1406,7 @@ export const BuildPackageStep: React.FC<
   }, [stage]);
 
   // Define variables first
-  const responses = bookingData.responses || {};
+  const responses: Partial<BookingData["responses"]> = bookingData.responses || {};
   const vehicleClass = responses["vehicle-class"] || "CAR";
   const vehicleSubtype = responses["vehicle-subtype"];
   const coverageSelections = (responses[
@@ -1511,7 +1516,7 @@ export const BuildPackageStep: React.FC<
   // Coverage selection handlers
   const handleToggleCoverage = (option: CoverageOption) => {
     const hasFactoryTint = responses['has-factory-tint'];
-    let newSelections: CoverageOption[];
+    let newSelections: CoverageOption[] = [...coverageSelections];
 
     if (coverageSelections.includes(option)) {
       // If option is already selected, remove it

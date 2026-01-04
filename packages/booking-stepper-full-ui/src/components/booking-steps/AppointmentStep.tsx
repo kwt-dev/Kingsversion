@@ -6,11 +6,11 @@ import { Button } from '../ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Skeleton } from '../ui/skeleton';
 import { Clock, MapPin, Calendar as CalendarIcon, ChevronRight, ChevronLeft } from 'lucide-react';
-import { BookingData } from '../WindowTintingBookingStepper';
+import { BookingData, BookingDataUpdate } from '../WindowTintingBookingStepper';
 
 interface AppointmentStepProps {
   bookingData: Partial<BookingData>;
-  updateBookingData: (updates: Partial<BookingData>) => void;
+  updateBookingData: (updates: BookingDataUpdate) => void;
   onNext: () => void;
 }
 
@@ -80,8 +80,14 @@ export const AppointmentStep: React.FC<AppointmentStepProps> = ({
   const [hasAnimated, setHasAnimated] = useState(false);
   const [selectedSlotId, setSelectedSlotId] = useState<string | null>(null);
   
-  const attendee = bookingData.attendee || {};
-  const currentTimeZone = attendee.timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const attendee: BookingData['attendee'] = {
+    name: '',
+    email: '',
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    language: 'en',
+    ...bookingData.attendee,
+  };
+  const currentTimeZone = attendee.timeZone;
 
   // Mock API call to fetch available time slots
   const fetchTimeSlots = async (date: Date) => {

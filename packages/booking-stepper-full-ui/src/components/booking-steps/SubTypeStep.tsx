@@ -1,11 +1,11 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Card } from '../ui/card';
-import { BookingData } from '../WindowTintingBookingStepper';
+import { BookingData, BookingDataUpdate } from '../WindowTintingBookingStepper';
 
 interface SubTypeStepProps {
   bookingData: Partial<BookingData>;
-  updateBookingData: (updates: Partial<BookingData>) => void;
+  updateBookingData: (updates: BookingDataUpdate) => void;
   onNext: () => void;
 }
 
@@ -48,10 +48,13 @@ export const SubTypeStep: React.FC<SubTypeStepProps> = ({
 }) => {
   const vehicleClass = bookingData.responses?.['vehicle-class'];
   const selectedSubtype = bookingData.responses?.['vehicle-subtype'];
-  const isTruck = vehicleClass === 'TRUCK_PENDING';
+  const isTruck = vehicleClass === 'TRUCK';
   const isCar = vehicleClass === 'CAR';
 
-  const handleSubtypeSelect = (subtypeId: string, newVehicleClass?: string) => {
+  const handleSubtypeSelect = (
+    subtypeId: string,
+    newVehicleClass?: BookingData['responses']['vehicle-class']
+  ) => {
     updateBookingData({
       responses: {
         ...bookingData.responses,

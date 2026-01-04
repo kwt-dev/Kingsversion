@@ -5,11 +5,11 @@ import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
 import { Badge } from '../ui/badge';
 import { Calendar, Clock, Car, Shield, Phone, Mail, MessageSquare } from 'lucide-react';
-import { BookingData } from '../WindowTintingBookingStepper';
+import { BookingData, BookingDataUpdate } from '../WindowTintingBookingStepper';
 
 interface ReviewConfirmStepProps {
   bookingData: Partial<BookingData>;
-  updateBookingData: (updates: Partial<BookingData>) => void;
+  updateBookingData: (updates: BookingDataUpdate) => void;
   onNext: () => void;
   onConfirm: () => void;
 }
@@ -18,8 +18,14 @@ export const ReviewConfirmStep: React.FC<ReviewConfirmStepProps> = ({
   bookingData,
   onConfirm,
 }) => {
-  const attendee = bookingData.attendee || {};
-  const responses = bookingData.responses || {};
+  const attendee: BookingData['attendee'] = {
+    name: '',
+    email: '',
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    language: 'en',
+    ...bookingData.attendee,
+  };
+  const responses: Partial<BookingData['responses']> = bookingData.responses || {};
 
   const formatDate = (isoString: string) => {
     const date = new Date(isoString);
@@ -83,7 +89,7 @@ export const ReviewConfirmStep: React.FC<ReviewConfirmStepProps> = ({
   };
 
   const calculateLineItems = () => {
-    const items = [];
+    const items: Array<{ name: string; price: number }> = [];
     const coverageSelections = responses['coverage-selections'] || [];
     const filmTier = responses['film-tier'] || '';
     const windshieldTier = responses['windshield-tier'] || filmTier;

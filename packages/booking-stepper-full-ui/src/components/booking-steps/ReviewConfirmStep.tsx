@@ -9,12 +9,12 @@ import { Label } from '../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 import { Calendar, Clock, Car, Shield, Phone, Mail, MessageSquare, Edit3 } from 'lucide-react';
-import { BookingData } from '../WindowTintingBookingStepper';
+import { BookingData, BookingDataUpdate } from '../WindowTintingBookingStepper';
 
 
 interface ReviewConfirmStepProps {
   bookingData: Partial<BookingData>;
-  updateBookingData: (updates: Partial<BookingData>) => void;
+  updateBookingData: (updates: BookingDataUpdate) => void;
   onNext: () => void;
   onConfirm: () => void;
 }
@@ -24,8 +24,14 @@ export const ReviewConfirmStep: React.FC<ReviewConfirmStepProps> = ({
   updateBookingData,
   onConfirm,
 }) => {
-  const attendee = bookingData.attendee || {};
-  const responses = bookingData.responses || {};
+  const attendee: BookingData['attendee'] = {
+    name: '',
+    email: '',
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    language: 'en',
+    ...bookingData.attendee,
+  };
+  const responses: Partial<BookingData['responses']> = bookingData.responses || {};
 
   // Dialog states
   const [showContactEdit, setShowContactEdit] = useState(false);
@@ -40,7 +46,7 @@ export const ReviewConfirmStep: React.FC<ReviewConfirmStepProps> = ({
   });
 
   const [vehicleForm, setVehicleForm] = useState({
-    year: responses['vehicle-year'] || '',
+    year: responses['vehicle-year'] ? String(responses['vehicle-year']) : '',
     make: responses['vehicle-make'] || '',
     model: responses['vehicle-model'] || '',
     color: responses['vehicle-color'] || '',
@@ -81,7 +87,7 @@ export const ReviewConfirmStep: React.FC<ReviewConfirmStepProps> = ({
     updateBookingData({
       responses: {
         ...responses,
-        'vehicle-year': vehicleForm.year,
+        'vehicle-year': vehicleForm.year ? parseInt(vehicleForm.year, 10) : undefined,
         'vehicle-make': vehicleForm.make,
         'vehicle-model': vehicleForm.model,
         'vehicle-color': vehicleForm.color,
@@ -166,7 +172,7 @@ export const ReviewConfirmStep: React.FC<ReviewConfirmStepProps> = ({
   };
 
   const calculateLineItems = () => {
-    const items = [];
+    const items: Array<{ name: string; price: number }> = [];
     const coverageSelections = responses['coverage-selections'] || [];
     const filmTier = responses['film-tier'] || '';
     const windshieldTier = responses['windshield-tier'] || filmTier;
@@ -174,9 +180,9 @@ export const ReviewConfirmStep: React.FC<ReviewConfirmStepProps> = ({
     // Add each coverage selection as a separate line item
     coverageSelections.forEach((selection) => {
       switch (selection) {
-        case 'FRONTS':
+        case 'FACTORY_MATCH_FRONT_DOORS':
           items.push({
-            name: `Factory Match (Fronts) - ${getFilmTierLabel(filmTier)}`,
+            name: `Factory Match - Front Doors - ${getFilmTierLabel(filmTier)}`,
             price: 179, // Placeholder - would come from actual pricing
           });
           break;
@@ -380,7 +386,7 @@ export const ReviewConfirmStep: React.FC<ReviewConfirmStepProps> = ({
                               <Label htmlFor="edit-year">Year</Label>
                               <Select
                                 value={vehicleForm.year?.toString() || ''}
-                                onValueChange={(value) => setVehicleForm(prev => ({ ...prev, year: parseInt(value) }))}
+                                onValueChange={(value: string) => setVehicleForm(prev => ({ ...prev, year: value }))}
                               >
                                 <SelectTrigger className="mt-1">
                                   <SelectValue placeholder="Year" />

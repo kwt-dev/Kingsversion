@@ -6,11 +6,11 @@ import React, { useState } from 'react';
   import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
   import { Textarea } from '../ui/textarea';
   import { Checkbox } from '../ui/checkbox';
-  import { BookingData } from '../WindowTintingBookingStepper';
+  import { BookingData, BookingDataUpdate } from '../WindowTintingBookingStepper';
 
   interface DetailsStepProps {
     bookingData: Partial<BookingData>;
-    updateBookingData: (updates: Partial<BookingData>) => void;
+    updateBookingData: (updates: BookingDataUpdate) => void;
     onNext: () => void;
   }
 
@@ -46,8 +46,14 @@ import React, { useState } from 'react';
   }) => {
     const [phoneInput, setPhoneInput] = useState(bookingData.responses?.['customer-phone'] || '');
 
-    const attendee = bookingData.attendee || {};
-    const responses = bookingData.responses || {};
+    const attendee: BookingData['attendee'] = {
+      name: '',
+      email: '',
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      language: 'en',
+      ...bookingData.attendee,
+    };
+    const responses: Partial<BookingData['responses']> = bookingData.responses || {};
 
     const formatPhone = (value: string): string => {
       const numbers = value.replace(/\D/g, '');
@@ -182,7 +188,7 @@ import React, { useState } from 'react';
                       <Label htmlFor="year">Year *</Label>
                       <Select
                         value={responses['vehicle-year']?.toString() || ''}
-                        onValueChange={(value) => handleInputChange('vehicle-year', parseInt(value))}
+                        onValueChange={(value: string) => handleInputChange('vehicle-year', parseInt(value))}
                       >
                         <SelectTrigger className="mt-1">
                           <SelectValue placeholder="Year" />
@@ -201,7 +207,7 @@ import React, { useState } from 'react';
                       <Label htmlFor="make">Make *</Label>
                       <Select
                         value={responses['vehicle-make'] || ''}
-                        onValueChange={(value) => handleInputChange('vehicle-make', value)}
+                        onValueChange={(value: string) => handleInputChange('vehicle-make', value)}
                       >
                         <SelectTrigger className="mt-1">
                           <SelectValue placeholder="Make" />
@@ -232,7 +238,7 @@ import React, { useState } from 'react';
                     <Label htmlFor="color">Color *</Label>
                     <Select
                       value={responses['vehicle-color'] || ''}
-                      onValueChange={(value) => handleInputChange('vehicle-color', value)}
+                      onValueChange={(value: string) => handleInputChange('vehicle-color', value)}
                     >
                       <SelectTrigger className="mt-1">
                         <SelectValue placeholder="Select color" />
@@ -264,7 +270,7 @@ import React, { useState } from 'react';
                     <Label htmlFor="referral">How did you hear about us?</Label>
                     <Select
                       value={responses['referral-source'] || ''}
-                      onValueChange={(value) => handleInputChange('referral-source', value)}
+                      onValueChange={(value: string) => handleInputChange('referral-source', value)}
                     >
                       <SelectTrigger className="mt-1">
                         <SelectValue placeholder="Select source" />
@@ -295,7 +301,7 @@ import React, { useState } from 'react';
                     <Checkbox
                       id="marketing"
                       checked={responses['marketing-opt-in'] || false}
-                      onCheckedChange={(checked) => handleInputChange('marketing-opt-in', checked)}
+                      onCheckedChange={(checked: boolean) => handleInputChange('marketing-opt-in', checked)}
                     />
                     <div className="grid gap-1.5 leading-none">
                       <Label

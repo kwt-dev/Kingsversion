@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { Card } from '../ui/card';
 import { Checkbox } from '../ui/checkbox';
 import { Info, X } from 'lucide-react';
-import { BookingData } from '../WindowTintingBookingStepper';
+import { BookingData, BookingDataUpdate } from '../WindowTintingBookingStepper';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { 
@@ -15,15 +15,15 @@ import {
 
 interface CoverageSelectionStepProps {
   bookingData: Partial<BookingData>;
-  updateBookingData: (updates: Partial<BookingData>) => void;
+  updateBookingData: (updates: BookingDataUpdate) => void;
   onNext: () => void;
 }
 
-type CoverageOption = 'FRONTS' | 'SIDES_REAR' | 'WINDSHIELD' | 'SUN_STRIP';
+type CoverageOption = 'FACTORY_MATCH_FRONT_DOORS' | 'SIDES_REAR' | 'WINDSHIELD' | 'SUN_STRIP';
 
 const COVERAGE_OPTIONS = [
   {
-    id: 'FRONTS' as CoverageOption,
+    id: 'FACTORY_MATCH_FRONT_DOORS' as CoverageOption,
     title: 'Factory Match (Fronts Only)',
     helper: 'Match your factory rear tint on the two front windows.',
     regions: ['front_sides'],
@@ -208,9 +208,9 @@ export const CoverageSelectionStep: React.FC<CoverageSelectionStepProps> = ({
   const [hoveredRegions, setHoveredRegions] = useState<string[]>([]);
   const [hasError, setHasError] = useState(false);
   
-  const responses = bookingData.responses || {};
+  const responses: Partial<BookingData['responses']> = bookingData.responses || {};
   const vehicleClass = responses['vehicle-class'] || 'CAR';
-  const coverageSelections = responses['coverage-selections'] || [];
+  const coverageSelections = (responses['coverage-selections'] || []) as CoverageOption[];
 
   // Show error message when no selections are made
   const showValidationError = () => {
@@ -270,7 +270,7 @@ export const CoverageSelectionStep: React.FC<CoverageSelectionStepProps> = ({
   const calculatePriceRange = (): { min: number; max: number } => {
     // Price tiers for CS, XR, XR Plus respectively
     const PRICING_TIERS = {
-      'FRONTS': { min: 159, max: 199 }, // CS to XR Plus
+      'FACTORY_MATCH_FRONT_DOORS': { min: 159, max: 199 }, // CS to XR Plus
       'SIDES_REAR': { min: 299, max: 549 }, // CS to XR Plus  
       'WINDSHIELD': { min: 199, max: 349 }, // CS to XR Plus
       'SUN_STRIP': { min: 49, max: 49 }, // Fixed price across all tiers
@@ -297,7 +297,7 @@ export const CoverageSelectionStep: React.FC<CoverageSelectionStepProps> = ({
 
   const calculateDuration = (): string => {
     let duration = 0;
-    if (coverageSelections.includes('FRONTS')) duration += 45;
+    if (coverageSelections.includes('FACTORY_MATCH_FRONT_DOORS')) duration += 45;
     if (coverageSelections.includes('SIDES_REAR')) duration += 90;
     if (coverageSelections.includes('WINDSHIELD')) duration += 60;
     if (coverageSelections.includes('SUN_STRIP')) duration += 15;
@@ -461,7 +461,7 @@ export const CoverageSelectionStep: React.FC<CoverageSelectionStepProps> = ({
                           <div className="flex items-center gap-2">
                             <h4 className="font-medium">{option.title}</h4>
                             <Tooltip>
-                              <TooltipTrigger onClick={(e) => e.stopPropagation()}>
+                              <TooltipTrigger onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                 <Info className="h-4 w-4 text-muted-foreground" />
                               </TooltipTrigger>
                               <TooltipContent>
